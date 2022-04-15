@@ -49,8 +49,16 @@ EOF
     }
 
     #[Route('/questions/{slug}', name: 'app_question_show')]
-    public function show($slug)
+    public function show($slug, EntityManagerInterface $entityManager)
     {
+        $repository = $entityManager->getRepository(Question::class);
+
+        /** @var Question $question */
+        $question = $repository->findOneBy(['slug' => $slug]);
+        if(!$question){
+            throw $this->createNotFoundException(sprintf('no question found for slug "%s"', $slug));
+        }
+
         $answers = [
             'Make sure your cat is sitting purrrfectly still 🤣',
             'Honestly, I like furry shoes better than MY cat',
@@ -59,7 +67,7 @@ EOF
         $questionText = "I've been turned into a cat, any thoughts on how to turn back? While I'm **adorable**, I don't really care for cat food.";
 
         return $this->render('question/show.html.twig', [
-            'question' => ucwords(str_replace('-', ' ', $slug)),
+            'question' => $question,
             'answers' => $answers,
             'questionText' => $questionText
         ]);
