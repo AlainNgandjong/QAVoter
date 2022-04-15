@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\Question;
+use App\Repository\QuestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sentry\State\HubInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,9 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class QuestionController extends AbstractController
 {
     #[Route('/', name: 'app_homepage')]
-    public function index(): Response
+    public function index(QuestionRepository $questionRepository): Response
     {
-        return $this->render('question/homepage.html.twig');
+        $questions = $questionRepository->findAllAskedOrderdByNewest();
+
+        return $this->render('question/homepage.html.twig', [
+            'questions' => $questions
+        ]);
     }
 
     #[Route('/questions/new', name: 'app_question_new')]
