@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Question: {{ question }}{% endblock %}
+{% block title %}Question: {{ question.name }}{% endblock %}
 
 {% block body %}
 <div class="container">
@@ -17,12 +17,13 @@
                             <small>
                                 {% if question.askedAt %}
                                     Asked <br>
-                                    {{ question.askedAt|date('Y-m-d H:i:s') }}
+                                    {{ question.askedAt|ago }}
                                 {% else %}
                                     (unpublished)
                                 {% endif %}
                             </small>
                         </div>
+
                         <div class="col">
                             <h1 class="q-title-show">{{ question.name }}</h1>
                             <div class="q-display p-3">
