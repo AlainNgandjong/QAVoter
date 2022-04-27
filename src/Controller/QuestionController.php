@@ -54,15 +54,8 @@ EOF
     }
 
     #[Route('/questions/{slug}', name: 'app_question_show')]
-    public function show($slug, EntityManagerInterface $entityManager)
+    public function show(Question $question, EntityManagerInterface $entityManager)
     {
-        $repository = $entityManager->getRepository(Question::class);
-
-        /** @var Question $question */
-        $question = $repository->findOneBy(['slug' => $slug]);
-        if(!$question){
-            throw $this->createNotFoundException(sprintf('no question found for slug "%s"', $slug));
-        }
 
         $answers = [
             'Make sure your cat is sitting purrrfectly still 🤣',
