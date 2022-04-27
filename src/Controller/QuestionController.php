@@ -27,6 +27,7 @@ class QuestionController extends AbstractController
     public function new(EntityManagerInterface $entityManager)
     {
         $question = new Question();
+        $question->setVotes(rand(-20, 50));
         $question->setName('Missing pants')
             ->setSlug('missing-pants-'.rand(0, 1000))
             ->setQuestion(<<<EOF

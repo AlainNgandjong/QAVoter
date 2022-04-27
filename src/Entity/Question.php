@@ -14,16 +14,19 @@ class Question
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private ? string $name;
 
     #[ORM\Column(type: 'string', length: 100, unique: true)]
-    private $slug;
+    private ? string $slug;
 
     #[ORM\Column(type: 'text')]
-    private $question;
+    private ? string $question;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $askedAt;
+
+    #[ORM\Column(type: 'integer')]
+    private ? int $votes = 0;
 
     public function getId(): ?int
     {
@@ -76,5 +79,23 @@ class Question
         $this->askedAt = $askedAt;
 
         return $this;
+    }
+
+    public function getVotes(): ?int
+    {
+        return $this->votes;
+    }
+
+    public function setVotes(int $votes): self
+    {
+        $this->votes = $votes;
+
+        return $this;
+    }
+
+    public function getVotesString(): string
+    {
+        $prefix = $this->getVotes() >=0 ? '+' : '-';
+        return sprintf('%s %d', $prefix, abs($this->getVotes()));
     }
 }
