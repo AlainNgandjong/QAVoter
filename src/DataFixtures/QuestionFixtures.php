@@ -12,7 +12,12 @@ class QuestionFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
 
-        QuestionFactory::createMany(10);
+        QuestionFactory::createMany(15);
+
+        QuestionFactory::new()
+            ->unpublished()
+            ->createMany(5)
+        ;
 
         $manager->flush();
     }

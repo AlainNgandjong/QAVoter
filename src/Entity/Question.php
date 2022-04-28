@@ -17,16 +17,16 @@ class Question
     private ? string $name;
 
     #[ORM\Column(type: 'string', length: 100, unique: true)]
-    private ? string $slug;
+    private $slug;
 
     #[ORM\Column(type: 'text')]
-    private ? string $question;
+    private $question;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $askedAt;
 
     #[ORM\Column(type: 'integer')]
-    private ? int $votes = 0;
+    private $votes = 0;
 
     public function getId(): ?int
     {

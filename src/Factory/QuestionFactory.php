@@ -4,6 +4,7 @@ namespace App\Factory;
 
 use App\Entity\Question;
 use App\Repository\QuestionRepository;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -35,16 +36,20 @@ final class QuestionFactory extends ModelFactory
         // TODO inject services if required (https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services)
     }
 
+    public function unpublished(): self
+    {
+        return $this->addState(['askedAt' => null]);
+    }
+
     protected function getDefaults(): array
     {
         return [
             'name' => self::faker()->realText(50),
-            'slug' => self::faker()->slug(),
             'question' => self::faker()->paragraphs(
                 self::faker()->numberBetween(1, 4),
                 true
             ),
-            'askedAt' => self::faker()->boolean(70) ? \DateTimeImmutable::createFromMutable(self::faker()->datetime('-100 days', '-1 minute')) : null,
+            'askedAt' => \DateTimeImmutable::createFromMutable(self::faker()->datetime('-100 days', '-1 minute')),
             'votes' => rand(-20, 50),
         ];
     }
@@ -53,7 +58,12 @@ final class QuestionFactory extends ModelFactory
     {
         // see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
         return $this
-            // ->afterInstantiate(function(Question $question): void {})
+            ->afterInstantiate(function(Question $question) {
+                if (!$question->getSlug()) {
+                    $slugger = new AsciiSlugger();
+                    $question->setSlug($slugger->slug($question->getName()));
+                }
+            })
         ;
     }
 
