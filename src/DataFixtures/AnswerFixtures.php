@@ -12,7 +12,9 @@ class AnswerFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        AnswerFactory::createMany(20);
+        AnswerFactory::createMany(50);
+
+        AnswerFactory::new()->needsApproval()->createMany(20);
 
         $manager->flush();
     }
